@@ -53,8 +53,6 @@
              * Reset the tic tac toe board.
              */
             function reset() {
-                isComplete = false;
-                
                 document.getElementById("win-text").innerHTML = "";
 
                 gamebox = gamebox.map(row => {
@@ -67,7 +65,7 @@
             /**
              * 
              */
-            function displayWinner(message) {
+            function displayMessage(message) {
                 document.getElementById("win-text").innerHTML = message;
             }
 

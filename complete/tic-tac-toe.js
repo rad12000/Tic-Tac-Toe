@@ -1,7 +1,6 @@
 const xMark = "x-mark";
 const oMark = "o-mark";
 
-let isComplete = false;
 let currentTurn = xMark; // Start with X.
 
 let gamebox = [
@@ -18,22 +17,28 @@ let gamebox = [
 
 const isUnsetCell = (cellValue) => !cellValue || cellValue.length === 0;
 const toggleTurn = () => currentTurn = currentTurn === xMark ? oMark : xMark;
+const isComplete = () => {
+    const { hasAWinner } = checkForWinner();
+
+    return hasAWinner || isCatGame();
+}
 
 function handleBoxClick(rowNumber, colNumber) {
     const cell = gamebox[rowNumber][colNumber];
     const isMarked = cell.length > 0; // Check if the cell is empty.
 
-    if (isMarked || isComplete) return; // End execution if the cell is marked, or the game is finished.
+    if (isMarked || isComplete()) return; // End execution if the cell is marked, or the game is finished.
 
     markBox(rowNumber, colNumber);
 
     const { hasAWinner, winnerName } = checkForWinner();
-    
     if (hasAWinner) {
-        displayWinner(`Looks like ${winnerName === xMark ? "X" : "O"}'s won!`);
+        return displayMessage(`Looks like ${winnerName === xMark ? "X" : "O"}'s won!`);
     }
 
-    isComplete = hasAWinner;
+    if (isCatGame()) {
+        displayMessage(`It's a CAT!`);
+    }
 }
 
 function markBox(rowNumber, colNumber) {
@@ -140,4 +145,16 @@ function checkForDiagonalWin() {
     }
 
     return { hasAWinner: false }
+}
+
+function isCatGame() {
+    for (const row of gamebox) {
+        for (const col of row) {
+            if (!col || col.length === 0) {
+                return false; // The box is empty, which means the game is not a CAT.
+            }
+        }
+    }
+
+    return true;
 }
