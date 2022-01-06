@@ -1,0 +1,81 @@
+* {
+    padding: 0px;
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-bar {
+    width: 50vw;
+    text-align: center;
+}
+
+button {
+    height: 40px;
+    width: 100%;
+    border: solid black 1px;
+}
+
+#tic-tac-toe-box {
+    width: 50vw;
+    height: 50vw;
+    border: solid black 2px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex: 1;
+}
+
+.col {
+    display: flex;
+    flex: 1;
+    border: solid black 1px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.x-mark::after {
+    content: "";
+    border: solid red 3px;
+    display: flex;
+    width: calc(50vw / 3 * 0.5);
+    transform: rotate(45deg);
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+.x-mark::before {
+    content: "";
+    border: solid red 3px;
+    display: flex;
+    width: calc(50vw / 3 * 0.5);
+    transform: rotate(-45deg);
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+.o-mark::after {
+    content: "";
+    border: solid blue 3px;
+    display: flex;
+    width: calc(50vw / 3 * 0.5);
+    height: calc(50vw / 3 * 0.5);
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    border-radius: 100%;
+}

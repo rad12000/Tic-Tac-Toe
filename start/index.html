@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./index.css" />
+    </head>
+    <body>
+        <div class='menu-bar'>
+            <h3 id="win-text"></h3>
+            <button onclick="reset()">Reset Game</button>
+        </div>
+
+        <div id='tic-tac-toe-box'>
+            <div class='row'>
+                <div class='col'></div>
+                <div class='col'></div>
+                <div class='col'></div>
+            </div>
+
+            <div class='row'>
+                <div class='col'></div>
+                <div class='col'></div>
+                <div class='col'></div>
+            </div>
+
+            <div class='row'>
+                <div class='col'></div>
+                <div class='col'></div>
+                <div class='col'></div>
+            </div>
+        </div>
+
+        <script src="./tic-tac-toe.js"></script>
+        <script>
+            window.addEventListener('load', () => addBoxClickEventListeners());
+
+            function addBoxClickEventListeners() {
+                const boxes = document.getElementsByClassName("col");
+
+                for (const box of boxes) {
+                    box.addEventListener("click", (e) => {
+                        const col = e.target;
+                        const row = e.target.parentElement;
+                        const gamebox = row.parentElement;
+                        const rowNumber = Array.prototype.indexOf.call(gamebox.children, row);
+                        const colNumber = Array.prototype.indexOf.call(row.children, col);
+
+                        handleBoxClick(rowNumber, colNumber);
+                    });
+                }
+            }
+
+            /**
+             * Reset the tic tac toe board.
+             */
+            function reset() {
+                isComplete = false;
+                
+                document.getElementById("win-text").innerHTML = "";
+
+                gamebox = gamebox.map(row => {
+                    return row.map(col => "")
+                });
+
+                refreshView();
+            }
+
+            /**
+             * 
+             */
+            function displayWinner(message) {
+                document.getElementById("win-text").innerHTML = message;
+            }
+
+            /**
+             * Refreshes the tic tac toe board, based on the gamebox array
+             */
+            function refreshView() {
+                const rows = document.getElementById("tic-tac-toe-box").children;
+
+                for (let rowNumber = 0; rowNumber < rows.length; rowNumber++) {
+                    const row = rows[rowNumber];
+                    const cols = row.children;
+
+                    for (let colNumber = 0; colNumber < cols.length; colNumber++) {
+                        const column = cols[colNumber];
+                        const columnClass = gamebox[rowNumber][colNumber];
+
+                        column.className = `col ${columnClass}`;
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
