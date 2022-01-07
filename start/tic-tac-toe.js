@@ -1,6 +1,6 @@
 const xMark = "x-mark";
 const oMark = "o-mark";
-
+var GameOver = false;
 let currentTurn = xMark; // Start with X.
 previousTurn = "";
 let gamebox = [
@@ -20,6 +20,7 @@ const oToWin = gamebox[0].length * oValue;
 var numMoves = 0;
 
 function handleBoxClick(rowNumber, colNumber) {
+    if (GameOver) return;
     console.log(`Row number: ${rowNumber}; Column number: ${colNumber}`);
     numMoves++;
     if (gamebox[rowNumber][colNumber] == "") {
@@ -38,7 +39,8 @@ function handleBoxClick(rowNumber, colNumber) {
                 previousTurn = oMark;
         }
         if (numMoves > 4 && isGameOver()) {
-            displayMessage(previousTurn + " won");
+            displayMessage(previousTurn + " won. Game over");
+            GameOver = true;
         }
         refreshView()
 
