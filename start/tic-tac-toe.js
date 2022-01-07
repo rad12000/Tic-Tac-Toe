@@ -4,21 +4,9 @@ const oMark = "o-mark";
 let currentTurn = xMark; // Start with X.
 
 let gamebox = [
-    // Row
-    [
-        // Columns
-        [], [], []
-    ],
-    // Row
-    [
-        // Columns
-        [], [], []
-    ],
-    // Row
-    [
-        // Columns
-        [], [], []
-    ]
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""]
 ];
 
 function handleBoxClick(rowNumber, colNumber) {

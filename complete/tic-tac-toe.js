@@ -4,15 +4,9 @@ const oMark = "o-mark";
 let currentTurn = xMark; // Start with X.
 
 let gamebox = [
-    [
-        [], [], []
-    ],
-    [
-        [], [], []
-    ],
-    [
-        [], [], []
-    ]
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""]
 ];
 
 const isUnsetCell = (cellValue) => !cellValue || cellValue.length === 0;
