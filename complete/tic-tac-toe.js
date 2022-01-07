@@ -1,44 +1,44 @@
-const xMark = "x-mark";
-const oMark = "o-mark";
+const xMark = 1;
+const oMark = 0;
+const unset = -1;
 
-let currentTurn = xMark; // Start with X.
+let currentTurn = xMark;
 
 let gamebox = [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""]
+    [unset, unset, unset],
+    [unset, unset, unset],
+    [unset, unset, unset]
 ];
 
-const isUnsetCell = (cellValue) => !cellValue || cellValue.length === 0;
-const toggleTurn = () => currentTurn = currentTurn === xMark ? oMark : xMark;
-const isComplete = () => {
-    const { hasAWinner } = checkForWinner();
+const boxWidth = gamebox[0].length;
+const xSum = xMark * boxWidth;
+const oSum = oMark * boxWidth;
 
-    return hasAWinner || isCatGame();
-}
+const isUnsetCell = (cellValue) => cellValue === unset;
+const toggleTurn = () => currentTurn = currentTurn === xMark ? oMark : xMark;
+const isComplete = () => checkForWinner() || isFullBoard();
 
 function handleBoxClick(rowNumber, colNumber) {
     const cell = gamebox[rowNumber][colNumber];
-    const isMarked = cell.length > 0; // Check if the cell is empty.
+    const isMarked = cell != unset;
 
-    if (isMarked || isComplete()) return; // End execution if the cell is marked, or the game is finished.
+    if (isMarked || isComplete()) return;
 
     markBox(rowNumber, colNumber);
 
-    const { hasAWinner, winnerName } = checkForWinner();
-    if (hasAWinner) {
-        return displayMessage(`Looks like ${winnerName === xMark ? "X" : "O"}'s won!`);
+    if (checkForWinner()) {
+        return displayMessage(`Looks like ${currentTurn === xMark ? "X" : "O"}'s won!`);
     }
 
-    if (isCatGame()) {
+    if (isFullBoard()) {
         displayMessage(`It's a CAT!`);
     }
+
+    toggleTurn();
 }
 
 function markBox(rowNumber, colNumber) {
     gamebox[rowNumber][colNumber] = currentTurn;
-
-    toggleTurn();
     refreshView();
 }
 
@@ -50,58 +50,56 @@ function checkForWinner() {
     ]
 
     for (const performCheck of checks) {
-        const { hasAWinner, winnerName } = performCheck();
-
-        if (hasAWinner) {
-            return { hasAWinner, winnerName };
+        if (performCheck()) {
+            return true;
         }
     }
 
-    return { hasAWinner: false }
+    return false;
 }
 
 function checkForRowWin() {
     for (const row of gamebox) {
-        const valToCheck = row[0];
-        let rowDiffs = isUnsetCell(valToCheck);
+        let rowSum = 0;
 
         for (const col of row) {
-            if (col != valToCheck) {
-                rowDiffs = true;
+            if (isUnsetCell(col)) {
+                rowSum = unset;
+                break;
             }
+
+            rowSum += col;
         }
 
-        if (!rowDiffs) {
-            return { hasAWinner: true, winnerName: valToCheck }
+        if (isWinningValue(rowSum)) {
+            return true;
         }
     }
 
-    return { hasAWinner: false }
+    return false;
 }
 
 function checkForColWin() {
-    const numberOfCols = gamebox[0].length;
+    for (let colNumber = 0; colNumber < boxWidth; colNumber++) {
+        let colSum = 0;
 
-    // Loops through each column in the gamebox.
-    for (let colNumber = 0; colNumber < numberOfCols; colNumber++) {
-        const valToCheck = gamebox[0][colNumber];
-        let colDiffs = isUnsetCell(valToCheck);
-
-        // Checks each row within the given column for a winner.
         for (const row of gamebox) {
             const colVal = row[colNumber];
 
-            if (colVal != valToCheck) {
-                colDiffs = true;
+            if (isUnsetCell(colVal)) {
+                colSum = unset;
+                break;
             }
+
+            colSum += colVal;
         }
 
-        if (!colDiffs) {
-            return { hasAWinner: true, winnerName: valToCheck }
+        if (isWinningValue(colSum)) {
+            return true
         }
     }
 
-    return { hasAWinner: false }
+    return false;
 }
 
 const StartCorner = {
@@ -110,29 +108,28 @@ const StartCorner = {
 }
 
 function checkForDiagonalWin() {
-    let { hasAWinner, winnerName } = checkDiagonalByCorner(StartCorner.left);
-    if (hasAWinner) return { hasAWinner, winnerName };
+    const didWin = checkDiagonalByCorner(StartCorner.left);
+    if (didWin) return true;
 
-    let { hasAWinner: didWin, winnerName: name } = checkDiagonalByCorner(StartCorner.right);
-    if (didWin) return { hasAWinner: didWin, winnerName: name };
-
-    return { hasAWinner: false }
+    return checkDiagonalByCorner(StartCorner.right);
 }
 
 function checkDiagonalByCorner(startCorner) {
     const leftCol = 0;
-    const rightCol = gamebox[0].length - 1;
+    const rightCol = boxWidth - 1;
 
     let colNumber = startCorner === StartCorner.left ? leftCol : rightCol;
-    let valToCheck = gamebox[0][colNumber];
-    let diffs = isUnsetCell(valToCheck);
+    let sum = 0;
 
     for (const row of gamebox) {
-        const colVal = row[colNumber];
+        const cellVal = row[colNumber];
 
-        if (colVal != valToCheck) {
-            diffs = true;
+        if (isUnsetCell(cellVal)) {
+            sum = unset;
+            break;
         }
+
+        sum += cellVal;
 
         if (startCorner === StartCorner.left) {
             colNumber++;
@@ -142,13 +139,18 @@ function checkDiagonalByCorner(startCorner) {
         colNumber--;
     }
 
-    return { hasAWinner: !diffs, winnerName: valToCheck }
+    return isWinningValue(sum);
 }
 
-function isCatGame() {
+function isWinningValue(sum) {
+    if (sum === xSum || sum === oSum) return true;
+    return false;
+}
+
+function isFullBoard() {
     for (const row of gamebox) {
         for (const col of row) {
-            if (!col || col.length === 0) {
+            if (isUnsetCell(col)) {
                 return false; // The box is empty, which means the game is not a CAT and we can end the function.
             }
         }
