@@ -88,10 +88,12 @@ function checkForRowWin() {
 function checkForColWin() {
     const numberOfCols = gamebox[0].length;
 
+    // Loops through each column in the gamebox.
     for (let colNumber = 0; colNumber < numberOfCols; colNumber++) {
         const valToCheck = gamebox[0][colNumber];
         let colDiffs = isUnsetCell(valToCheck);
 
+        // Checks each row within the given column for a winner.
         for (const row of gamebox) {
             const colVal = row[colNumber];
 
@@ -108,8 +110,26 @@ function checkForColWin() {
     return { hasAWinner: false }
 }
 
+const StartCorner = {
+    left: "left",
+    right: "right"
+}
+
 function checkForDiagonalWin() {
-    let colNumber = 0;
+    let { hasAWinner, winnerName } = checkDiagonalByCorner(StartCorner.left);
+    if (hasAWinner) return { hasAWinner, winnerName };
+
+    let { hasAWinner: didWin, winnerName: name } = checkDiagonalByCorner(StartCorner.right);
+    if (didWin) return { hasAWinner: didWin, winnerName: name };
+
+    return { hasAWinner: false }
+}
+
+function checkDiagonalByCorner(startCorner) {
+    const leftCol = 0;
+    const rightCol = gamebox[0].length - 1;
+
+    let colNumber = startCorner === StartCorner.left ? leftCol : rightCol;
     let valToCheck = gamebox[0][colNumber];
     let diffs = isUnsetCell(valToCheck);
 
@@ -120,41 +140,25 @@ function checkForDiagonalWin() {
             diffs = true;
         }
 
-        colNumber++;
-    }
-
-    if (!diffs) {
-        return { hasAWinner: true, winnerName: valToCheck }
-    }
-
-    valToCheck = gamebox[0][colNumber];
-    diffs = isUnsetCell(valToCheck);
-
-    for (const row of gamebox) {
-        const colVal = row[colNumber];
-
-        if (colVal != valToCheck) {
-            diffs = true;
+        if (startCorner === StartCorner.left) {
+            colNumber++;
+            continue;
         }
 
         colNumber--;
     }
 
-    if (!diffs) {
-        return { hasAWinner: true, winnerName: valToCheck }
-    }
-
-    return { hasAWinner: false }
+    return { hasAWinner: !diffs, winnerName: valToCheck }
 }
 
 function isCatGame() {
     for (const row of gamebox) {
         for (const col of row) {
             if (!col || col.length === 0) {
-                return false; // The box is empty, which means the game is not a CAT.
+                return false; // The box is empty, which means the game is not a CAT and we can end the function.
             }
         }
     }
 
-    return true;
+    return true; // The game is finished and it is a tied game.
 }

@@ -1,6 +1,8 @@
 const xMark = "x-mark";
 const oMark = "o-mark";
 
+let currentTurn = xMark; // Start with X.
+
 let gamebox = [
     // Row
     [

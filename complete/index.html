@@ -53,6 +53,8 @@
              * Reset the tic tac toe board.
              */
             function reset() {
+                currentTurn = xMark;
+                
                 document.getElementById("win-text").innerHTML = "";
 
                 gamebox = gamebox.map(row => {
