@@ -19,6 +19,19 @@ const oValue = 1;
 const oToWin = gamebox[0].length * oValue;
 var numMoves = 0;
 
+var element = document.getElementById('reset-button');
+
+element.onclick = handleReset; // Assigned
+
+function handleReset() {
+    console.log('my reset');
+    GameOver = false;
+    myBox = myBox.map(row => { 
+        return row.map(col => -5)
+    });
+    reset();
+}
+
 function handleBoxClick(rowNumber, colNumber) {
     if (GameOver) return;
     console.log(`Row number: ${rowNumber}; Column number: ${colNumber}`);
