@@ -24,7 +24,7 @@ var element = document.getElementById('reset-button');
 element.onclick = handleReset; // Assigned
 
 function handleReset() {
-    console.log('my reset');
+    //console.log('my reset');
     GameOver = false;
     myBox = myBox.map(row => { 
         return row.map(col => -5)
@@ -34,12 +34,12 @@ function handleReset() {
 
 function handleBoxClick(rowNumber, colNumber) {
     if (GameOver) return;
-    console.log(`Row number: ${rowNumber}; Column number: ${colNumber}`);
+    //console.log(`Row number: ${rowNumber}; Column number: ${colNumber}`);
     numMoves++;
     if (gamebox[rowNumber][colNumber] == "") {
         switch (currentTurn) {
             case xMark:
-                console.log("got here");
+                //console.log("got here");
                 gamebox[rowNumber][colNumber] = xMark;
                 myBox[rowNumber][colNumber] = 0;
                 currentTurn = oMark;
@@ -58,7 +58,7 @@ function handleBoxClick(rowNumber, colNumber) {
         refreshView()
 
     }
-    console.log("got here 2");
+    //console.log("got here 2");
 }
 
 function isGameOver() {
@@ -74,7 +74,7 @@ function isGameOver() {
         for (let col of row) {
             rowTotal += col;
         }
-        console.log(`rowTotal: ${rowTotal}, y: ${y}`);
+        //console.log(`rowTotal: ${rowTotal}, y: ${y}`);
         if (rowTotal == 0 || rowTotal == oToWin) return true;
     }
     for (let i = 0; i < numCols; i++){
@@ -82,7 +82,7 @@ function isGameOver() {
         for (let x = 0; x < numRows; x++){
             colTotal += myBox[x][i];
         }
-        console.log(`colTotal: ${colTotal}, i: ${i}`)
+        //console.log(`colTotal: ${colTotal}, i: ${i}`)
         if (colTotal == 0 || colTotal == oToWin) return true;
     }
 
@@ -90,14 +90,14 @@ function isGameOver() {
     for (let i = 0; i < numCols; i++){
         diagTotal += myBox[i][i];
     }
-    console.log(`diagTotal1: ${diagTotal}`)
+    //console.log(`diagTotal1: ${diagTotal}`)
     if (diagTotal == 0 || diagTotal == oToWin) return true;
     
     diagTotal = 0;
     for (let i = numCols - 1; i >= 0; i--){
             diagTotal += myBox[Math.abs((-numRows + 1) + i)][i];
     }
-    console.log(`diagTotal2: ${diagTotal}`)
+    //console.log(`diagTotal2: ${diagTotal}`)
     if (diagTotal == 0 || diagTotal == oToWin) return true;
 
     return false;
