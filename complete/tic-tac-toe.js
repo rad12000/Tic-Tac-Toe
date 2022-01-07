@@ -18,19 +18,24 @@ const isUnsetCell = (cellValue) => cellValue === unset;
 const toggleTurn = () => currentTurn = currentTurn === xMark ? oMark : xMark;
 const isComplete = () => checkForWinner() || isFullBoard();
 
+function displayMessage(message) {
+    displayMessageHtml(message);
+}
+
+function refreshView() {
+    refreshViewHtml();
+}
+
 function handleBoxClick(rowNumber, colNumber) {
     const cell = gamebox[rowNumber][colNumber];
-    const isMarked = cell != unset;
-
-    if (isMarked || isComplete()) return;
+    if (!isUnsetCell(cell) || isComplete()) return;
 
     markBox(rowNumber, colNumber);
 
     if (checkForWinner()) {
-        return displayMessage(`Looks like ${currentTurn === xMark ? "X" : "O"}'s won!`);
+        displayMessage(`Looks like ${currentTurn === xMark ? "X" : "O"}'s won!`);
     }
-
-    if (isFullBoard()) {
+    else if (isFullBoard()) {
         displayMessage(`It's a CAT!`);
     }
 

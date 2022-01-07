@@ -58,7 +58,7 @@
                 document.getElementById("win-text").innerHTML = "";
 
                 gamebox = gamebox.map(row => {
-                    return row.map(col => "")
+                    return row.map(col => -1)
                 });
 
                 refreshView();
@@ -67,14 +67,16 @@
             /**
              * 
              */
-            function displayMessage(message) {
+            function displayMessageHtml(message) {
                 document.getElementById("win-text").innerHTML = message;
             }
 
             /**
              * Refreshes the tic tac toe board, based on the gamebox array
              */
-            function refreshView() {
+            function refreshViewHtml() {
+
+
                 const rows = document.getElementById("tic-tac-toe-box").children;
 
                 for (let rowNumber = 0; rowNumber < rows.length; rowNumber++) {
@@ -83,10 +85,26 @@
 
                     for (let colNumber = 0; colNumber < cols.length; colNumber++) {
                         const column = cols[colNumber];
-                        const columnClass = gamebox[rowNumber][colNumber];
+                        const mark = gamebox[rowNumber][colNumber];
 
-                        column.className = `col ${columnClass}`;
+                        const markClass = getClass(mark);
+
+                        column.className = `col ${markClass}`;
                     }
+                }
+            }
+
+            function getClass(mark) {
+                const xClass = "x-mark";
+                const oClass = "o-mark";
+
+                switch (mark) {
+                    case 1:
+                        return xClass;
+                    case 0:
+                        return oClass;
+                    default:
+                        return "";
                 }
             }
         </script>
